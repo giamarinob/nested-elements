@@ -12,9 +12,9 @@ function nesting(max, $elem){
 			return 0;
 		}
 	}else{
-	//counter for current nesting chain
-		// debugger;
-		var depth = 0
+	  //counter for current nesting chain - how many ul's or ol's we have come across
+	  //counter does not increase for elements not matching those 2
+		var count = 0
 
 		//Array of children elements for a given dom element
 		var childrenArr = $elem.children;
@@ -22,21 +22,22 @@ function nesting(max, $elem){
 		//go through each child element for the current dom element
 		for(var i = 0; i < childrenArr.length; i++){
 
-			//if the current element is ul or ol then add one to the depth plus whatever comes back from the stack
+			//if the current element is ul or ol then add one to the count plus whatever comes back from the stack
 			if($elem.tagName === 'UL' || $elem.tagName === 'OL'){
-				depth = 1 + nesting(depth, childrenArr[i]);
+				count = 1 + nesting(count, childrenArr[i]);
 			}else{
-				//otherwise just add the stack to the depth
-				depth += nesting(depth, childrenArr[i]);
+				//otherwise just add the stack to the count
+				count += nesting(count, childrenArr[i]);
 			}
-			//check if the current max plus the depth from the stack is greater than current max
-			//if it is max is now current plus depth
-			//This should allow us to search multiple ancestry and keep track of the max depth across multiple 
+
+			//check if the current count plus the stack is greater than current max
+			//if it is max is now current count
+			//This should allow us to search multiple ancestry and keep track of the current count across multiple 
 			//nesting chains. 
-			if(depth > max){
-				max = depth;
+			if(count > max){
+				max = count;
 			}
-			depth = 0;
+			count = 0;
 		}
 		return max;
 	}
